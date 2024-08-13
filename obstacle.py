@@ -4,13 +4,13 @@ import random
 import time
 
 
+# For storing and handling of obstacle objects
 class Obstacle():
     def __init__(self, center_points, road_length):
         self.center_points = center_points
         self.road_length = road_length
-        self.obstacles = []
+        self.obstacles = []  # Container for obstacle instances
         self._obstacle = None
-
         self.create_obstacles()
 
     @property
@@ -24,9 +24,9 @@ class Obstacle():
             yield obs
         
     def create_obstacles(self):
+        # Make random placements for the obstacles
         points = []
         count = Cons.height
-        print(self.center_points)  
         for i in range(1, 18):
             try:
                 distance = random.randint(800, 1300)
@@ -45,9 +45,6 @@ class Obstacle():
 class ObstacleSprite(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-
-#        self.image = pygame.Surface([50, 50])
-#        self.image.fill("red")
         self.image = pygame.image.load('Rock1_5.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (70, 70))
         self.rect = self.image.get_rect()

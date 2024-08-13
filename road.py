@@ -38,14 +38,12 @@ class RoadSprite(pygame.sprite.Sprite):
 
         self.run_test = False
 
-
         self.points = []
         self.coords_start = []
         self.coords_end = []
         self.move_vector = pygame.Vector2(0, -self.speed)
 
         self.line_surface = pygame.Surface([self.screen_width, self.surface_height], pygame.SRCALPHA)
-
         self.image = self.line_surface
 
         self.final_start = {}
@@ -61,9 +59,8 @@ class RoadSprite(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.line_surface)
         
         # Test masking with outline
-        self.olist = self.mask.outline()
+        self.olist = self.mask.outline()  # For testing of masking
         pygame.draw.lines(self.line_surface, (158,201,158), False, list(self.olist))
-
         self.rect = self.image.get_rect()
 
     @property
@@ -236,6 +233,11 @@ class RoadSprite(pygame.sprite.Sprite):
         print(len(self.angles), len(self.changes))
 
     def draw_road(self):
+        # Road is first drawn virtually
+        # A vector makes a route according to directions
+        # Start/end coordinates of the vector are registered are registered in each position
+        # After that missing coords are filled
+        # Drawing is made with horizontal lines connecting start/end coordinates
 
         self.make_directions()
         while self.current_move_up < self.road_length:
@@ -274,7 +276,8 @@ class RoadSprite(pygame.sprite.Sprite):
 
             # Calculate the end point of the line, end means the left side of the road
             self.line_end = self.line_start - self.line_direction * self.road_width
-           
+          
+            # For testing if border check works in every situation
             if self.line_end.x < 0 or self.line_start.x > Cons.width:
                 print("\n\n", self.changes, self.angles, self.line_start, self.line_end, self.prev_angle, self.current_move_up, self.current_angle)
                 print("step", self.step)
@@ -284,6 +287,7 @@ class RoadSprite(pygame.sprite.Sprite):
             self.coords_start.append( [int(self.line_start.x), int(self.line_start.y) ])
             self.coords_end.append( [int(self.line_end.x), int(self.line_end.y)] ) 
 
+            # Currently not in use
             self.final_start[int(self.line_start.y)] = int(self.line_start.x)
             self.final_end[int(self.line_end.y)] = int(self.line_end.x)
 
@@ -296,6 +300,7 @@ class RoadSprite(pygame.sprite.Sprite):
         self.coords_start = self.fill_y(self.coords_start)
         self.coords_end = self.fill_y(self.coords_end)
 
+        # Not needed
         self.final_start = self.fill_y_dict(self.final_start)
         self.final_end = self.fill_y_dict(self.final_end)
 
@@ -315,9 +320,9 @@ class RoadSprite(pygame.sprite.Sprite):
         self.coords_end = remove_duplicates(self.coords_end)
         self.coords_start = remove_duplicates(self.coords_start)
 
+        # Testing
         self.final_start = {}
         self.final_end = {}
-
         for elem in self.coords_start:
             self.final_start[elem[1]] = elem[0]
         for elem in self.coords_end:
@@ -328,7 +333,7 @@ class RoadSprite(pygame.sprite.Sprite):
         end = self.coords_end[0][1]
         diff = start - end
 
-        # Make both lists to start from the same y-coord
+        # Adjust lists so that they start from the same y-coord
         # Because of vector drawing they don't start from same coords
         temp_list = []
         if diff > 0:
@@ -353,6 +358,7 @@ class RoadSprite(pygame.sprite.Sprite):
         self.check_off_road()
         self.rect.y += self._scroll_speed
 
+    # Not in use, calculates available space for obstacles
     def get_obstacle_space(self, y, height):
         start1 = int(self.final_start[y])
         end1 = int(self.final_end[y])
