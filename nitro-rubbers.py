@@ -4,8 +4,8 @@ from road import RoadSprite
 from cons import Cons
 from vehicle import Player, EnemyCar
 from obstacle import Obstacle
-#from sounds import playerSound
 import random
+#from sounds import playerSound
 #import threading
 #import io
 #import numpy as np
@@ -27,6 +27,7 @@ obstacle_sprites = pygame.sprite.Group()
 road_objects_list = pygame.sprite.Group()
 
 # Test road math
+
 #TEST = True 
 TEST = False
 if TEST:
@@ -61,12 +62,13 @@ for o in obs.obstacle:
     obstacle_sprites.add(o)
 
 
-road_y = list(road.road_center_points.keys())[0]  # -1
+# road_y keeps track on roads relative y-coord when it is scrolled
+road_y = list(road.road_center_points.keys())[0]  
 count = 0
 
-current_pitch = 0.1 
 
 # Testing sound
+#current_pitch = 0.1 
 #sound_thread = None
 #sound_channel = pygame.mixer.Channel(0)  # Create a mixer channel
 ####sound_obj = playerSound()
@@ -86,7 +88,7 @@ while running:
     if keys[pygame.K_LEFT]:
         player.make_turn(1)
     if keys[pygame.K_UP]:
-        road.scroll_speed = 0.1
+        road.scroll_speed = 0.1 # Player speed = road scrolling speed
         current_pitch += 1 
     if keys[pygame.K_DOWN]:
         road.scroll_speed = -0.1
@@ -95,7 +97,6 @@ while running:
     
     # Clamp the acceleration value to a reasonable range
     current_pitch = max(0.1, min(current_pitch, 0.3))
-    # print(current_pitch)
 
     # TODO: Sounds
     #sound_obj.sound_routine(current_pitch)
@@ -108,15 +109,15 @@ while running:
     obstacle_sprites.update(road.scroll_speed)
     road_y = road.rect.bottom 
     
-    offset = (player.rect.left - road.rect.left, player.rect.top - road.rect.top)
+    #offset = (player.rect.left - road.rect.left, player.rect.top - road.rect.top)
 
+    # Check road end
     if road_y > road.road_length + Cons.player_y_offset:
         running = False
         print("GAME OVER!")
    
     # Check car collision with obstacles
     # TODO: Faster collision check with rectangles
-    
     obstacle_coll = pygame.sprite.groupcollide(obstacle_sprites, vehicle_sprites_list, False, False, pygame.sprite.collide_mask)
     if obstacle_coll:
         print(obstacle_coll)
@@ -137,6 +138,7 @@ while running:
     #        obstacle_sprites.remove(cur_obs)
     #except IndexError:
     #    pass
+
 
     # Check if vehicle is on road, else slow down
     # For player must road scroll speed be changed
@@ -163,7 +165,8 @@ while running:
             if pygame.sprite.collide_mask(sprite1, sprite2):
                 
                 coords1 = pygame.sprite.collide_mask(sprite1, sprite2)
-               
+                
+                # If collision, change speed and rotation
                 if coords1:
                     if coords1[1] >= 0 and sprite2.rect.top > sprite1.rect.top:
                         sprite1.speed = 0
