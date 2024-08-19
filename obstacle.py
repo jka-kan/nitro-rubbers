@@ -45,7 +45,7 @@ class Obstacle():
 class ObstacleSprite(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load('Rock1_5.png').convert_alpha()
+        self.image = pygame.image.load('rock1.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (70, 70))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y

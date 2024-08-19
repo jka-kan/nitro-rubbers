@@ -1,12 +1,7 @@
-from collections import deque
 from cons import Cons
 import pygame
 import random
-from pygame import gfxdraw
-from pprint import pprint
-import random
 from vars import Vars
-import time
 
 
 class RoadSprite(pygame.sprite.Sprite):
@@ -103,6 +98,7 @@ class RoadSprite(pygame.sprite.Sprite):
                     index += 1
         return coords
 
+    # Currently not in use
     def fill_y_dict(self, stuff):
         #coords = copy.deepcopy(stuff)
         coords = dict(sorted(stuff.items()))
@@ -125,7 +121,6 @@ class RoadSprite(pygame.sprite.Sprite):
                         coords[i] = prev_x + (x_step * count)
                 prev_y = y
             except KeyError:
-                print("error", y)
                 pass
         coords = dict(sorted(coords.items()))
         return coords
@@ -225,8 +220,6 @@ class RoadSprite(pygame.sprite.Sprite):
         # End with 0 angle
         self.angles.append(0)
 
-#        self.angles.pop(0)
-#        self.changes.pop(0)
         self.prev_angle = 0
         self.step = 0
         print(self.angles, self.changes, self.road_length)

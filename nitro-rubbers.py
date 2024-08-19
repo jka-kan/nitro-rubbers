@@ -10,7 +10,7 @@ import random
 #import io
 #import numpy as np
 
-
+### Sound effects are in testing phase and not yet implemented.
 
 # Initialize Pygame
 pygame.init()
@@ -26,7 +26,7 @@ vehicle_sprites_list = pygame.sprite.Group()
 obstacle_sprites = pygame.sprite.Group()
 road_objects_list = pygame.sprite.Group()
 
-# Test road math
+# For testing road math
 
 #TEST = True 
 TEST = False
@@ -39,6 +39,7 @@ if TEST:
 else:
     road = RoadSprite(Cons.height, Cons.width)
 
+# Initialize sprites
 
 road.rect.y = -(road.road_length - Cons.height)
 road_objects_list.add(road)
@@ -62,12 +63,12 @@ for o in obs.obstacle:
     obstacle_sprites.add(o)
 
 
-# road_y keeps track on roads relative y-coord when it is scrolled
+# road_y keeps track on road's relative y-coord when it is scrolled
 road_y = list(road.road_center_points.keys())[0]  
-count = 0
 
 
 # Testing sound
+
 #current_pitch = 0.1 
 #sound_thread = None
 #sound_channel = pygame.mixer.Channel(0)  # Create a mixer channel
@@ -89,15 +90,14 @@ while running:
         player.make_turn(1)
     if keys[pygame.K_UP]:
         road.scroll_speed = 0.1 # Player speed = road scrolling speed
-        current_pitch += 1 
+        #current_pitch += 1 
     if keys[pygame.K_DOWN]:
         road.scroll_speed = -0.1
-        current_pitch -= 1
+        #current_pitch -= 1
     new_rect = player.image.get_rect(center=(player.rect.x, player.rect.y))
     
     # Clamp the acceleration value to a reasonable range
-    current_pitch = max(0.1, min(current_pitch, 0.3))
-
+    #current_pitch = max(0.1, min(current_pitch, 0.3))
     # TODO: Sounds
     #sound_obj.sound_routine(current_pitch)
 
@@ -109,8 +109,6 @@ while running:
     obstacle_sprites.update(road.scroll_speed)
     road_y = road.rect.bottom 
     
-    #offset = (player.rect.left - road.rect.left, player.rect.top - road.rect.top)
-
     # Check road end
     if road_y > road.road_length + Cons.player_y_offset:
         running = False
@@ -127,17 +125,6 @@ while running:
                 print(car)
                 car.rotation = 25
                 car.rect.x += random.choice([-7, 7])
-
-
-    # Remove obstacles when they have scrolled out of screen to save time
-    # Problem: enemy cars behind won't collide with obstacles
-    # Solution: remove when last car has passed obstacle?
-    #try:
-    #    cur_obs =  obstacle_sprites.sprites()[0]
-    #    if cur_obs.rect.y > 1000:
-    #        obstacle_sprites.remove(cur_obs)
-    #except IndexError:
-    #    pass
 
 
     # Check if vehicle is on road, else slow down
@@ -184,7 +171,6 @@ while running:
                         sprite1.rotation = -20
                         sprite1.rect.x += 20
             
-    count += 1
 
     road_objects_list.draw(screen)
     vehicle_sprites_list.draw(screen)
