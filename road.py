@@ -1,7 +1,6 @@
 from cons import Cons
 import pygame
 import random
-from vars import Vars
 
 
 class RoadSprite(pygame.sprite.Sprite):

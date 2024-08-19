@@ -1,7 +1,6 @@
 import pygame
 from cons import Cons
 import random
-import time
 
 
 # For storing and handling of obstacle objects
